@@ -6,6 +6,7 @@ import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import pe.edu.cibertec.DSWII_CL1SOAPRubioVallasCarrasco.converter.PacienteConvert;
+import pe.edu.cibertec.DSWII_CL1SOAPRubioVallasCarrasco.model.Paciente;
 import pe.edu.cibertec.DSWII_CL1SOAPRubioVallasCarrasco.repository.PacienteRepository;
 import pe.edu.cibertec.ws.objects.*;
 
@@ -41,6 +42,21 @@ public class PacienteEndPoint {
                 .convertPacienteToPacienteWs(
                         pacienteRepository.findById(request.getId()).get());
         response.setPaciente(pacientews);
+        return response;
+    }
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "postPacienteRequest")
+    @ResponsePayload
+    public PostPacienteResponse postPaciente(@RequestPayload
+                                             PostPacienteRequest request){
+        PostPacienteResponse response = new PostPacienteResponse();
+        Paciente newPaciente =
+                pacienteConvert.convertPacienteWsToPaciente(
+                        request.getPaciente());
+        Pacientews newPacientews =
+                pacienteConvert.convertPacienteToPacienteWs(
+                        pacienteRepository.save(newPaciente)
+                );
+        response.setPaciente(newPacientews);
         return response;
     }
 }

@@ -26,5 +26,9 @@ public class PacienteService {
         }
         return paciente.get();
     }
+    //guardar
+    public Paciente guardarPaciente(Paciente paciente){
 
+        return pacienteRepository.save(paciente);
+    }
 }
